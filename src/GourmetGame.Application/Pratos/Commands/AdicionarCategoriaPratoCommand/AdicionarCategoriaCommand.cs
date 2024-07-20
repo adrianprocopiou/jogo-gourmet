@@ -1,5 +1,6 @@
 ﻿using GourmetGame.Application.Core.Commands;
 using GourmetGame.Application.Core.Results;
+using GourmetGame.Application.Pratos.Entities;
 using GourmetGame.Application.Pratos.Repositories;
 using MediatR;
 
@@ -23,7 +24,19 @@ namespace GourmetGame.Application.Pratos.Commands.AdicionarCategoriaPratoCommand
 
         public async Task<CommandResult<Unit>> Handle(AdicionarCategoriaPratoCommand command, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (command.CategoriaAssociadaId is not null)
+            {
+                var categoriaExists = await _repository
+                    .CategoriaPratoExistsAsync(command.CategoriaAssociadaId.Value,
+                    cancellationToken);
+
+                if (!categoriaExists)
+                {
+                    return CommandResult<Unit>
+                        .Fail("A Categoria Informada não é valida.", nameof(command.CategoriaAssociadaId));
+                }
+            }          
+            return await Task.FromResult(CommandResult<Unit>.Success(Unit.Value));
         }
     }
 }
