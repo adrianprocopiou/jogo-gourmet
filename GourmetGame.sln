@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GourmetGame.WindowsForms", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - UI", "1 - UI", "{0D13F4EC-8804-4E0B-A61D-6D039DE3007D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Application", "2 - Application", "{3C00DBCC-6A5F-46B8-8575-6172B5B1F2A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GourmetGame.Application", "src\GourmetGame.Application\GourmetGame.Application.csproj", "{13CDDA7C-DAE1-4006-9B51-8F42E9192463}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GourmetGame.Application.Tests", "src\GourmetGame.Application.Tests\GourmetGame.Application.Tests.csproj", "{4B9EBE3E-27BE-4799-923A-A2AA16B6AECF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +23,22 @@ Global
 		{C496B51D-7D2F-4CF7-A3D3-5E75A0D2949F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C496B51D-7D2F-4CF7-A3D3-5E75A0D2949F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C496B51D-7D2F-4CF7-A3D3-5E75A0D2949F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13CDDA7C-DAE1-4006-9B51-8F42E9192463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13CDDA7C-DAE1-4006-9B51-8F42E9192463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13CDDA7C-DAE1-4006-9B51-8F42E9192463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13CDDA7C-DAE1-4006-9B51-8F42E9192463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B9EBE3E-27BE-4799-923A-A2AA16B6AECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B9EBE3E-27BE-4799-923A-A2AA16B6AECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B9EBE3E-27BE-4799-923A-A2AA16B6AECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B9EBE3E-27BE-4799-923A-A2AA16B6AECF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C496B51D-7D2F-4CF7-A3D3-5E75A0D2949F} = {0D13F4EC-8804-4E0B-A61D-6D039DE3007D}
+		{13CDDA7C-DAE1-4006-9B51-8F42E9192463} = {3C00DBCC-6A5F-46B8-8575-6172B5B1F2A2}
+		{4B9EBE3E-27BE-4799-923A-A2AA16B6AECF} = {3C00DBCC-6A5F-46B8-8575-6172B5B1F2A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DDEB15B0-EDA0-4B94-9B42-34A6E3B47126}
