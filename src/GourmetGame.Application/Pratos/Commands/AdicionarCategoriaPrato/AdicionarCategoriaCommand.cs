@@ -37,6 +37,15 @@ namespace GourmetGame.Application.Pratos.Commands.AdicionarCategoriaPrato
                 }
             }
 
+            var isNomePratoJaUtilizado = await _repository
+                .IsNomePratoJaUtilizadoAsync(command.NomePrato, cancellationToken);
+
+            if (isNomePratoJaUtilizado)
+            {
+                return CommandResult<Unit>
+                    .Fail("O prato informado já existe em outra categoria!", nameof(command.NomePrato));
+            }
+
             await _repository
                 .AddAsync(new CategoriaPrato(
                         command.NomeCategoria,

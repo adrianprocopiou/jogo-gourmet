@@ -27,7 +27,7 @@ namespace GourmetGame.Application.Pratos.Repositories
             // Simulando uma operação assincrona no banco de dados
             return await _context
                 .CategoriasPratos
-                .AnyAsyncFakeDb(c => c.Id == categoriaPratoId, cancellationToken);
+                .AnyAsync(c => c.Id == categoriaPratoId, cancellationToken);
         }
 
         public async Task<List<CategoriaPrato>> GetCategoriasPratoAsync(bool apenasCategoriasPrincipais, CancellationToken cancellationToken)
@@ -45,6 +45,13 @@ namespace GourmetGame.Application.Pratos.Repositories
 
             return await query
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task<bool> IsNomePratoJaUtilizadoAsync(string nomePrato, CancellationToken cancellationToken)
+        {
+            return await _context
+                .Pratos
+                .AnyAsync(p => p.Nome.ToLower() == nomePrato.ToLower().Trim(), cancellationToken);
         }
     }
 }

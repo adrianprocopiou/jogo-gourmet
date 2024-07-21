@@ -57,7 +57,7 @@ namespace GourmetGame.Application.Data.Contexts
             });
         }
 
-        public static async Task<bool> AnyAsyncFakeDb<T>(this ICollection<T> dbSet, Func<T, bool> predicate, CancellationToken cancellationToken)
+        public static async Task<bool> AnyAsync<T>(this ICollection<T> dbSet, Func<T, bool> predicate, CancellationToken cancellationToken)
         {
             return await Task.Run(() => dbSet.Any(predicate), cancellationToken);
         }
