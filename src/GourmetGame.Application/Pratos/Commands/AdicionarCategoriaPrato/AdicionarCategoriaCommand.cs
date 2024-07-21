@@ -4,7 +4,7 @@ using GourmetGame.Application.Pratos.Entities;
 using GourmetGame.Application.Pratos.Repositories;
 using MediatR;
 
-namespace GourmetGame.Application.Pratos.Commands.AdicionarCategoriaPratoCommand
+namespace GourmetGame.Application.Pratos.Commands.AdicionarCategoriaPrato
 {
     public class AdicionarCategoriaPratoCommand : ICommand<CommandResult<Unit>>
     {
@@ -35,7 +35,7 @@ namespace GourmetGame.Application.Pratos.Commands.AdicionarCategoriaPratoCommand
                     return CommandResult<Unit>
                         .Fail("A Categoria Informada não é valida.", nameof(command.CategoriaAssociadaId));
                 }
-            }          
+            }
             return await Task.FromResult(CommandResult<Unit>.Success(Unit.Value));
         }
     }

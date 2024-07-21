@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using GourmetGame.Application.Pratos.Commands.AdicionarCategoriaPratoCommand;
+using GourmetGame.Application.Pratos.Commands.AdicionarCategoriaPrato;
 using GourmetGame.Application.Pratos.Repositories;
 using NSubstitute;
 
