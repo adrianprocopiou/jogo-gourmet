@@ -33,7 +33,7 @@ namespace GourmetGame.Application.Core.Results
 
         public static CommandResult<TResult> Fail(string message, string property)
         {
-            return Fail(new BusinessError(property, message));
+            return Fail(new BusinessError(message, property));
         }
 
         public static CommandResult<TResult> Success(TResult result)

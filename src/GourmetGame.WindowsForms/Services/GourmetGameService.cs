@@ -1,4 +1,5 @@
-﻿using GourmetGame.Application.Core.Senders;
+﻿using GourmetGame.Application.Core.Errors;
+using GourmetGame.Application.Core.Senders;
 using GourmetGame.Application.Pratos.Commands.AdicionarCategoriaPrato;
 using GourmetGame.Application.Pratos.Entities;
 using GourmetGame.Application.Pratos.Queries.ObterCategoriaPrato;
@@ -75,7 +76,14 @@ namespace GourmetGame.WindowsForms.Services
                 CategoriaAssociadaId =
                     categoriaAssociadaId != default ? categoriaAssociadaId : null
             };
-            await _dispatcher.SendCommand(comando);
+            var result = await _dispatcher.SendCommand(comando);
+            
+            if(!result.HasSuccess) ExibirErrosAoAdicionarNovaCategoria(result.Errors);
+        }
+
+        private void ExibirErrosAoAdicionarNovaCategoria(List<BusinessError> errors)
+        {
+            _displayMessageService.ShowWarnings(errors);
         }
 
         private InputDialogBoxResult SolicitarEntradaUsuario(string mensagem, string titulo)
