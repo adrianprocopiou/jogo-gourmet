@@ -36,7 +36,15 @@ namespace GourmetGame.Application.Pratos.Commands.AdicionarCategoriaPrato
                         .Fail("A Categoria Informada não é valida.", nameof(command.CategoriaAssociadaId));
                 }
             }
-            return await Task.FromResult(CommandResult<Unit>.Success(Unit.Value));
+
+            await _repository
+                .AddAsync(new CategoriaPrato(
+                        command.NomeCategoria,
+                        new Prato(command.NomePrato),
+                        command.CategoriaAssociadaId),
+                    cancellationToken);
+
+            return CommandResult<Unit>.Success(Unit.Value);
         }
     }
 }

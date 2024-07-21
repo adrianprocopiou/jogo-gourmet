@@ -51,9 +51,11 @@
             btnInicioJogo.TabIndex = 1;
             btnInicioJogo.Text = "OK";
             btnInicioJogo.UseVisualStyleBackColor = true;
+            btnInicioJogo.Click += btnInicioJogo_ClickAsync;
             // 
             // FrmPrincipal
             // 
+            AcceptButton = btnInicioJogo;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(313, 107);
@@ -62,6 +64,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             Name = "FrmPrincipal";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = " Jogo Gourmet";
             ResumeLayout(false);
             PerformLayout();
