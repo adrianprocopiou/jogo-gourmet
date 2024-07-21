@@ -6,5 +6,7 @@ namespace GourmetGame.Application.Pratos.Repositories
     {
         Task<bool> CategoriaPratoExistsAsync(int categoriaPratoId, CancellationToken cancellationToken);
         Task AddAsync(CategoriaPrato categoriaPrato, CancellationToken cancellationToken);
+
+        Task<List<CategoriaPrato>> GetCategoriasPratoAsync(bool apenasCategoriasPrincipais, CancellationToken cancellationToken);
     }
 }
