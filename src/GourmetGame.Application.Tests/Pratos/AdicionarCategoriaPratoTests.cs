@@ -77,5 +77,28 @@ namespace GourmetGame.Application.Tests.Pratos
             result.HasSuccess.Should().BeFalse();
             result.Errors.Should().NotBeNullOrEmpty();
         }
+        
+        [Fact(DisplayName = "Não deve retornar erro quando a o nome do prato informado não existir para outro prato.")]
+        public async Task Nao_Deve_Retornar_Erro_Quando_O_Nome_Do_Prato_Informado_Ainda_Nao_Existir()
+        {
+            // Arrange            
+            var command = new AdicionarCategoriaPratoCommand()
+            {
+                NomeCategoria = "Cereal",
+                NomePrato = "Arroz"
+            };
+
+            var repository = Substitute.For<ICategoriaPratoRepository>();
+            repository.IsNomePratoJaUtilizadoAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(false);
+
+            var handler = new AdicionarCategoriaPratoCommandHandler(repository);
+
+            // Act
+            var result = await handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            result.HasSuccess.Should().BeTrue();
+            result.Errors.Should().BeNullOrEmpty();
+        }
     }
 }
