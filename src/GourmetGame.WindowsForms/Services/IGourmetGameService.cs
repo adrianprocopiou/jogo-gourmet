@@ -2,6 +2,6 @@
 {
     public interface IGourmetGameService
     {
-        Task IniciarJogo(CancellationToken cancellationToken);
+        void IniciarJogo();
     }
 }

@@ -1,104 +1,73 @@
-﻿using GourmetGame.Application.Core.Errors;
-using GourmetGame.Application.Core.Senders;
-using GourmetGame.Application.Pratos.Commands.AdicionarCategoriaPrato;
-using GourmetGame.Application.Pratos.Entities;
-using GourmetGame.Application.Pratos.Queries.ObterCategoriaPrato;
-using GourmetGame.WindowsForms.Core.DisplayMessage;
+﻿using GourmetGame.WindowsForms.Core.DisplayMessage;
 using GourmetGame.WindowsForms.Core.InputDialogBox;
+using GourmetGame.WindowsForms.Entities;
 
 namespace GourmetGame.WindowsForms.Services
 {
     public class GourmetGameService : IGourmetGameService
     {
-        private readonly IDispatcher _dispatcher;
         private readonly IDisplayMessageService _displayMessageService;
-
-        public GourmetGameService(IDispatcher dispatcher, IDisplayMessageService displayMessageService)
+        private readonly List<Prato> _pratosEmMemoria;
+        public GourmetGameService(IDisplayMessageService displayMessageService)
         {
-            _dispatcher = dispatcher;
             _displayMessageService = displayMessageService;
+            _pratosEmMemoria = new List<Prato>()
+            {
+                new Prato("Lasanha", "massa")
+            };
         }
 
-        public async Task IniciarJogo(CancellationToken cancellationToken)
+        public void IniciarJogo()
         {
-            var pratoPadrao = new Prato("Bolo de Chocolate");
-            var categoriaPadrao = new CategoriaPrato("Doce", pratoPadrao);
-            
-            var categoriaEscolhida = await ObterCategoriaDeEscolhaDoUsuarioAsync(null, cancellationToken)
-                ?? categoriaPadrao;
+            var nomeDoPratoEscolhido = "Bolo de Chocolate";
+            var listaParaAdicaoDoNovoPrato = _pratosEmMemoria;
 
-            if (IsPratoSelecionadoPeloUsuario(categoriaEscolhida.Prato))
-                _displayMessageService.ShowInformation("Acertei de novo!");
-            else
-                await AdicionarNovaCategoriaAsync(categoriaEscolhida.Prato.Nome, categoriaEscolhida.Id);
-
-        }
-
-        private async Task<CategoriaPrato?> ObterCategoriaDeEscolhaDoUsuarioAsync(ICollection<CategoriaPrato>? categorias, CancellationToken cancellationToken)
-        {
-            categorias ??= await _dispatcher.SendQuery(new ObterCategoriasPratoQuery()
+            var pratoEscolhidoPeloUsuario = ObterPratoDeEscolhaDoUsuario(_pratosEmMemoria);
+            if(pratoEscolhidoPeloUsuario is not null)
             {
-                // Buscando apenas as categorias principais removendo da busca as subcategorias
-                ApenasCategoriasPrincipais = true
-            }, cancellationToken);
-
-            foreach (var categoria in categorias)
-            {
-                if (!IsCategoriaSelecionadaPeloUsuario(categoria)) continue;
-
-                // Caso o usuário tenha escolhido a categoria, verificaremos (de forma recursiva) se o usuário irá escolher
-                // alguma das categorias associadas a categoria escolhida (subCategorias)
-                var subCategoriaEscolhida = await ObterCategoriaDeEscolhaDoUsuarioAsync(categoria.SubCategorias, cancellationToken);
-
-                // Caso o usuário tenha escolhido uma subCategoria, retornamos a subCategoria escolhida
-                if (subCategoriaEscolhida is not null) return subCategoriaEscolhida;
-
-                // Caso o usuário não tenha escolhido uma subCategoria, após escolher uma categoria
-                // retornamos a categoria escolhida anteriormente
-                return categoria;
+                nomeDoPratoEscolhido = pratoEscolhidoPeloUsuario.Nome;
+                listaParaAdicaoDoNovoPrato = pratoEscolhidoPeloUsuario.PratosAssociados;
             }
-            // Caso o usuário não tenha escolhido nenhuma das categorias
+            
+            if (IsPratoSelecionadoPeloUsuario(nomeDoPratoEscolhido))
+                _displayMessageService.ShowInformation("Acertei de novo!", "Jogo Gourmet");
+            else
+                AdicionarNovoPratoEmMemoria(listaParaAdicaoDoNovoPrato, nomeDoPratoEscolhido);
+            
+                
+        }
+        private Prato? ObterPratoDeEscolhaDoUsuario(ICollection<Prato> pratos)
+        {
+            foreach (var prato in pratos)
+            {
+                if (IsPratoSelecionadoPeloUsuario(prato.Descricao))
+                {
+                    var pratoAssociadoEscolhido = ObterPratoDeEscolhaDoUsuario(prato.PratosAssociados);
+                    return pratoAssociadoEscolhido ?? prato;
+                }
+            }
             return null;
         }
 
-        private async Task AdicionarNovaCategoriaAsync(string nomePratoReferencia, int categoriaAssociadaId)
+        private void AdicionarNovoPratoEmMemoria(List<Prato> lista, string nomePratoReferencia)
         {
             var resultadoNomePrato = SolicitarEntradaUsuario("Qual prato você pensou?", "Desisto");
             if (resultadoNomePrato.Result != DialogResult.OK || string.IsNullOrWhiteSpace(resultadoNomePrato.InputText)) return;
 
-            var resultadoNomeCategoria = SolicitarEntradaUsuario($"{resultadoNomePrato.InputText} é ______ mas {nomePratoReferencia} não.", "Complete");
-            if (resultadoNomeCategoria.Result != DialogResult.OK || string.IsNullOrWhiteSpace(resultadoNomeCategoria.InputText)) return;
+            var resultadoDescricaoPrato = SolicitarEntradaUsuario($"{resultadoNomePrato.InputText} é ______ mas {nomePratoReferencia} não.", "Complete");
+            if (resultadoDescricaoPrato.Result != DialogResult.OK || string.IsNullOrWhiteSpace(resultadoDescricaoPrato.InputText)) return;
 
-            var comando = new AdicionarCategoriaPratoCommand
-            {
-                NomeCategoria = resultadoNomeCategoria.InputText,
-                NomePrato = resultadoNomePrato.InputText,
-                CategoriaAssociadaId =
-                    categoriaAssociadaId != default ? categoriaAssociadaId : null
-            };
-            var result = await _dispatcher.SendCommand(comando);
-            
-            if(!result.HasSuccess) ExibirErrosAoAdicionarNovaCategoria(result.Errors);
+            var novoPrato = new Prato(resultadoNomePrato.InputText, resultadoDescricaoPrato.InputText);
+            lista.Add(novoPrato);
         }
-
-        private void ExibirErrosAoAdicionarNovaCategoria(List<BusinessError> errors)
-        {
-            _displayMessageService.ShowWarnings(errors);
-        }
-
         private InputDialogBoxResult SolicitarEntradaUsuario(string mensagem, string titulo)
         {
             return _displayMessageService.GetInputString(mensagem, titulo);
         }
 
-        private bool IsPratoSelecionadoPeloUsuario(Prato prato)
+        private bool IsPratoSelecionadoPeloUsuario(string text)
         {
-            return _displayMessageService.ShowQuestion($"O prato que você pensou é {prato.Nome}?") == DialogResult.Yes;
-        }
-
-        private bool IsCategoriaSelecionadaPeloUsuario(CategoriaPrato categoria)
-        {
-            return _displayMessageService.ShowQuestion($"O prato que você pensou é {categoria.Nome}?") == DialogResult.Yes;
+            return _displayMessageService.ShowQuestion($"O prato que você pensou é {text}?") == DialogResult.Yes;
         }
     }
 }

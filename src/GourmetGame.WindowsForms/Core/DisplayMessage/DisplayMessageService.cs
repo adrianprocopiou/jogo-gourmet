@@ -1,5 +1,4 @@
-﻿using GourmetGame.Application.Core.Errors;
-using GourmetGame.WindowsForms.Core.InputDialogBox;
+﻿using GourmetGame.WindowsForms.Core.InputDialogBox;
 
 namespace GourmetGame.WindowsForms.Core.DisplayMessage
 {
@@ -26,12 +25,6 @@ namespace GourmetGame.WindowsForms.Core.DisplayMessage
         {
             return MessageBox.Show(questionText, title, MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
-        }
-
-        public DialogResult ShowWarnings(List<BusinessError> errors, string title = "Atenção")
-        {
-            var message = string.Join("\n", errors.Select(e => e.Message));
-            return MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 }
